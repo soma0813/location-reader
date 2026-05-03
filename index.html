@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>現在地表示</title>
+
+<style>
+body {
+  margin:0;
+  font-family:sans-serif;
+  text-align:center;
+}
+
+header {
+  background:#3f51b5;
+  color:white;
+  padding:20px;
+  font-size:24px;
+  font-weight:bold;
+}
+
+button {
+  font-size:18px;
+  padding:12px 20px;
+  margin:10px;
+  border:none;
+  border-radius:8px;
+  background-color:#3f51b5;
+  color:white;
+  font-weight:bold;
+}
+
+button:active {
+  background-color:#2c3e9e;
+}
+
+.lang-btn {
+  background-color:#e0e0e0;
+  color:black;
+}
+
+.active {
+  background-color:#3f51b5;
+  color:white;
+}
+
+.big {
+  font-size:50px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header id="title">現在地表示</header>
+
+<div>
+  <button id="btnJa" class="lang-btn active" onclick="setLang('ja')">日本語</button>
+  <button id="btnEn" class="lang-btn" onclick="setLang('en')">English</button>
+</div>
+
+<h2 id="msg">現在地を読み上げてください</h2>
+
+<p id="latLabel">緯度：</p>
+<div class="big" id="lat">取得中...</div>
+
+<p id="lngLabel">経度：</p>
+<div class="big" id="lng">取得中...</div>
+
+<p id="acc">精度：取得中...</p>
+
+<button onclick="speak()" id="speakBtn">現在地を音声で伝える</button>
+
+<script>
+let lang = "ja";
+
+function setLang(l){
+  lang = l;
+
+  const titleEl = document.getElementById("title");
+  const msgEl = document.getElementById("msg");
+  const latLabelEl = document.getElementById("latLabel");
+  const lngLabelEl = document.getElementById("lngLabel");
+  const speakBtnEl = document.getElementById("speakBtn");
+  const accEl = document.getElementById("acc");
+  const btnJa = document.getElementById("btnJa");
+  const btnEn = document.getElementById("btnEn");
+
+  btnJa.classList.remove("active");
+  btnEn.classList.remove("active");
+
+  if(l === "ja"){
+    btnJa.classList.add("active");
+    titleEl.innerText = "現在地表示";
+    msgEl.innerText = "現在地を読み上げてください";
+    latLabelEl.innerText = "緯度：";
+    lngLabelEl.innerText = "経度：";
+    speakBtnEl.innerText = "現在地を音声で伝える";
+  } else {
+    btnEn.classList.add("active");
+    titleEl.innerText = "Current Location";
+    msgEl.innerText = "Please read your current location";
+    latLabelEl.innerText = "Latitude:";
+    lngLabelEl.innerText = "Longitude:";
+    speakBtnEl.innerText = "Speak current location";
+  }
+
+  updateAccuracyText();
+}
+
+function updateAccuracyText(){
+  const accEl = document.getElementById("acc");
+  const accText = accEl.getAttribute("data-accuracy");
+
+  if(!accText){
+    accEl.innerText = lang === "ja" ? "精度：取得中..." : "Accuracy: Getting...";
+    return;
+  }
+
+  accEl.innerText = lang === "ja"
+    ? "精度：±" + accText + "m"
+    : "Accuracy: ±" + accText + "m";
+}
+
+function update(){
+  if(!navigator.geolocation){
+    document.getElementById("acc").innerText = "位置情報に対応していません";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    function(pos){
+      const la = pos.coords.latitude.toFixed(5);
+      const lo = pos.coords.longitude.toFixed(5);
+      const ac = pos.coords.accuracy.toFixed(2);
+
+      document.getElementById("lat").innerText = la;
+      document.getElementById("lng").innerText = lo;
+
+      document.getElementById("acc").setAttribute("data-accuracy", ac);
+      updateAccuracyText();
+    },
+    function(error){
+      document.getElementById("lat").innerText = lang === "ja" ? "取得失敗" : "Failed";
+      document.getElementById("lng").innerText = lang === "ja" ? "取得失敗" : "Failed";
+      document.getElementById("acc").innerText = lang === "ja"
+        ? "位置情報を許可してください"
+        : "Please allow location access";
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+  );
+}
+
+function speak(){
+  const latText = document.getElementById("lat").innerText;
+  const lngText = document.getElementById("lng").innerText;
+  const accText = document.getElementById("acc").getAttribute("data-accuracy");
+
+  let text;
+  if(lang === "ja"){
+    text = "現在地は、緯度" + latText + "、経度" + lngText;
+    if(accText) text += "、精度プラスマイナス" + accText + "メートル";
+    text += "です。";
+  } else {
+    text = "Your current location is latitude " + latText + ", longitude " + lngText;
+    if(accText) text += ", with an accuracy of " + accText + " meters";
+  }
+
+  const uttr = new SpeechSynthesisUtterance(text);
+  uttr.rate = 0.8;
+  uttr.lang = lang === "ja" ? "ja-JP" : "en-US";
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(uttr);
+}
+
+setLang("ja");
+update();
+setInterval(update, 5000);
+</script>
+
+</body>
+</html>
