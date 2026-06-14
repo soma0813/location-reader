@@ -78,10 +78,60 @@ h2 {
 #speakBtn:active {
   background:#2c3e9e;
 }
+#loadingScreen{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:#f5f6fa;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+#loadingIcon{
+  width:140px;
+  height:140px;
+  margin-bottom:20px;
+}
+
+#loadingTitle{
+  font-size:42px;
+  font-weight:bold;
+  color:#002060;
+}
+
+#loadingText{
+  margin-top:20px;
+  font-size:22px;
+  color:#555;
+}
+
+#mainScreen{
+  display:none;
+}
 </style>
 </head>
 
 <body>
+<div id="loadingScreen">
+
+  <img id="loadingIcon" src="icon.png">
+
+  <div id="loadingTitle">
+    I'm here!
+  </div>
+
+  <div id="loadingText">
+    現在地を取得しています...
+  </div>
+
+</div>
+
+<div id="mainScreen">
 
 <header id="title">現在地表示</header>
 
@@ -174,7 +224,8 @@ function update(){
 
       document.getElementById("lat").innerText = la;
       document.getElementById("lng").innerText = lo;
-
+      document.getElementById("loadingScreen").style.display = "none";
+      document.getElementById("mainScreen").style.display = "block";
       lastAccuracy = ac;
       updateAccuracyText();
     },
@@ -229,7 +280,7 @@ setLang("ja");
 update();
 setInterval(update, 5000);
 </script>
-
+<div>
 </body>
 <script data-goatcounter="https://location-reader.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
