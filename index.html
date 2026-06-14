@@ -109,10 +109,6 @@ h2 {
   font-size:22px;
   color:#555;
 }
-
-#mainScreen{
-  display:none;
-}
 </style>
 </head>
 
@@ -130,8 +126,6 @@ h2 {
   </div>
 
 </div>
-
-<div id="mainScreen">
 
 <header id="title">現在地表示</header>
 
@@ -152,7 +146,6 @@ h2 {
 <p id="acc">精度：取得中...</p>
 
 <button onclick="speak()" id="speakBtn">現在地を音声で伝える</button>
-</div>
 <script>
 let lang = "ja";
 let lastAccuracy = null;
@@ -282,10 +275,8 @@ setInterval(update, 5000);
 
 setTimeout(function(){
   const loading = document.getElementById("loadingScreen");
-  const main = document.getElementById("mainScreen");
-
+ 
   if(loading) loading.remove();
-  if(main) main.style.display = "block";
 }, 3000);
 </script>
 </body>
