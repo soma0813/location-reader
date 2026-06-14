@@ -296,8 +296,11 @@ update();
 setInterval(update, 5000);
 
 setTimeout(function(){
-  document.getElementById("loadingScreen").style.display = "none";
-  document.getElementById("mainScreen").style.display = "block";
+  const loading = document.getElementById("loadingScreen");
+  const main = document.getElementById("mainScreen");
+
+  if(loading) loading.remove();
+  if(main) main.style.display = "block";
 }, 3000);
 </script>
 </div>
