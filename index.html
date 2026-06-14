@@ -132,21 +132,6 @@ h2 {
 </div>
 
 <div id="mainScreen">
-<div id="loadingScreen">
-
-  <img id="loadingIcon" src="icon.png">
-
-  <div id="loadingTitle">
-    I'm here!
-  </div>
-
-  <div id="loadingText">
-    現在地を取得しています...
-  </div>
-
-</div>
-
-<div id="mainScreen">
 
 <header id="title">現在地表示</header>
 
@@ -167,7 +152,7 @@ h2 {
 <p id="acc">精度：取得中...</p>
 
 <button onclick="speak()" id="speakBtn">現在地を音声で伝える</button>
-
+</div>
 <script>
 let lang = "ja";
 let lastAccuracy = null;
@@ -303,7 +288,6 @@ setTimeout(function(){
   if(main) main.style.display = "block";
 }, 3000);
 </script>
-</div>
 </body>
 <script data-goatcounter="https://location-reader.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
