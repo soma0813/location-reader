@@ -281,8 +281,20 @@ setTimeout(function(){
  
   if(loading) loading.remove();
 }, 3000);
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./sw.js")
+        .then(() => {
+          console.log("Service Worker registered");
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
+    });
+  }
 </script>
-</body>
 <script data-goatcounter="https://location-reader.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+</body>
 </html>
