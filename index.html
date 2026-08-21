@@ -1,44 +1,69 @@
 <!doctype html>
 <html lang="ja">
+
 <head>
+
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icon.png">
+
   <meta name="theme-color" content="#3f51b5">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>I'm here! －現在地表示アプリ－</title>
 
+
 <style>
+
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+  min-height: 100dvh;
+
   display: flex;
   flex-direction: column;
+
   font-family: sans-serif;
   text-align: center;
+
   color: #222;
   background: #f5f6fa;
 }
 
+
 /* ヘッダー */
+
 header {
   background: #3f51b5;
   color: white;
+
   padding: 20px 10px;
+
   font-size: 24px;
   font-weight: bold;
 }
 
+
+/* 言語切替ボタン */
+
 .lang-btn {
   font-size: 16px;
+
   padding: 12px;
   margin: 6px;
+
   border: none;
   border-radius: 10px;
+
   width: 28%;
+
   background: #e0e0e0;
   color: black;
+
   font-weight: bold;
 }
 
@@ -47,16 +72,24 @@ header {
   color: white;
 }
 
+
+/* 説明文 */
+
 h2 {
   font-size: 22px;
   font-weight: bold;
 }
 
+
+/* 緯度・経度 */
+
 #latLabel,
 #lngLabel {
   font-size: 22px;
   font-weight: bold;
+
   color: #222;
+
   margin-top: 15px;
 }
 
@@ -65,80 +98,131 @@ h2 {
   font-weight: bold;
 }
 
+
+/* 精度 */
+
 #acc {
   font-size: 20px;
   font-weight: bold;
+
   margin-top: 10px;
 }
+
+
+/* 音声ボタン */
 
 #speakBtn {
   width: 90%;
   max-width: 420px;
+
   font-size: 20px;
+  font-weight: bold;
+
   padding: 16px;
-  margin-top: 20px;
+
+  /* 中央配置 */
+  margin: 20px auto 0;
+  display: block;
+
   border: none;
   border-radius: 12px;
+
   background: #3f51b5;
   color: white;
-  font-weight: bold;
 }
 
 #speakBtn:active {
   background: #2c3e9e;
 }
 
+
 /* フッター */
+
 footer {
+
+  /* 余ったスペースをフッターの上に入れる */
+  margin-top: auto;
+
   background: #3f51b5;
   color: white;
+
   text-align: center;
+
   font-size: 16px;
   font-weight: bold;
+
   padding: 14px 10px;
-  margin-top: 40px;
 }
 
+
 /* 起動画面 */
+
 #loadingScreen {
+
   position: fixed;
+
   top: 0;
   left: 0;
+
   width: 100%;
   height: 100%;
+
   background: #f5f6fa;
+
   display: flex;
   flex-direction: column;
+
   justify-content: center;
   align-items: center;
+
   z-index: 9999;
 }
 
+
 #loadingIcon {
+
   width: 140px;
   height: 140px;
+
   margin-bottom: 20px;
 }
 
+
 #loadingTitle {
+
   font-size: 42px;
   font-weight: bold;
+
   color: #002060;
 }
 
+
 #loadingText {
+
   margin-top: 20px;
+
   font-size: 22px;
+
   color: #555;
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
+<!-- 起動画面 -->
+
 <div id="loadingScreen">
 
-  <img id="loadingIcon" src="icon.png">
+  <img
+    id="loadingIcon"
+    src="icon.png"
+    alt="I'm here!"
+  >
 
   <div id="loadingTitle">
     I'm here!
@@ -150,65 +234,124 @@ footer {
 
 </div>
 
+
+
+<!-- ヘッダー -->
+
 <header>
   I'm here! －現在地表示アプリ－
 </header>
 
+
+
+<!-- 言語切替 -->
+
 <div>
-  <button id="btnJa" class="lang-btn active" onclick="setLang('ja')">
+
+  <button
+    id="btnJa"
+    class="lang-btn active"
+    onclick="setLang('ja')"
+  >
     日本語
   </button>
 
-  <button id="btnEn" class="lang-btn" onclick="setLang('en')">
+
+  <button
+    id="btnEn"
+    class="lang-btn"
+    onclick="setLang('en')"
+  >
     English
   </button>
 
-  <button id="btnZh" class="lang-btn" onclick="setLang('zh')">
+
+  <button
+    id="btnZh"
+    class="lang-btn"
+    onclick="setLang('zh')"
+  >
     中文
   </button>
+
 </div>
+
+
+
+<!-- 案内 -->
 
 <h2 id="msg">
   現在地を読み上げてください
 </h2>
 
+
+
+<!-- 緯度 -->
+
 <p id="latLabel">
   緯度：
 </p>
 
-<div class="big" id="lat">
+<div
+  class="big"
+  id="lat"
+>
   取得中...
 </div>
+
+
+
+<!-- 経度 -->
 
 <p id="lngLabel">
   経度：
 </p>
 
-<div class="big" id="lng">
+<div
+  class="big"
+  id="lng"
+>
   取得中...
 </div>
+
+
+
+<!-- 精度 -->
 
 <p id="acc">
   精度：取得中...
 </p>
 
-<button onclick="speak()" id="speakBtn">
+
+
+<!-- 音声ボタン -->
+
+<button
+  onclick="speak()"
+  id="speakBtn"
+>
   現在地を音声で伝える
 </button>
 
-<footer>
-  提供：大津市消防局
-</footer>
+
+
+<!-- JavaScript -->
 
 <script>
 
 let lang = "ja";
+
 let lastAccuracy = null;
 
-/* 言語切替 */
+
+/* ================================
+   言語切替
+================================ */
+
 function setLang(l) {
 
   lang = l;
+
 
   const msgEl =
     document.getElementById("msg");
@@ -236,11 +379,14 @@ function setLang(l) {
     .classList.remove("active");
 
 
+  /* 日本語 */
+
   if (l === "ja") {
 
     document
       .getElementById("btnJa")
       .classList.add("active");
+
 
     msgEl.innerText =
       "現在地を読み上げてください";
@@ -256,11 +402,15 @@ function setLang(l) {
 
   }
 
+
+  /* 英語 */
+
   else if (l === "en") {
 
     document
       .getElementById("btnEn")
       .classList.add("active");
+
 
     msgEl.innerText =
       "Please read your current location";
@@ -276,11 +426,15 @@ function setLang(l) {
 
   }
 
+
+  /* 中国語 */
+
   else {
 
     document
       .getElementById("btnZh")
       .classList.add("active");
+
 
     msgEl.innerText =
       "请读出当前位置";
@@ -296,32 +450,50 @@ function setLang(l) {
 
   }
 
+
   updateAccuracyText();
+
 }
 
 
-/* 精度表示 */
+
+/* ================================
+   精度表示
+================================ */
+
 function updateAccuracyText() {
 
   const acc =
     document.getElementById("acc");
 
+
   if (lastAccuracy === null) {
 
-    if (lang === "ja")
+    if (lang === "ja") {
+
       acc.innerText =
         "精度：取得中...";
 
-    if (lang === "en")
+    }
+
+    else if (lang === "en") {
+
       acc.innerText =
         "Accuracy: Getting...";
 
-    if (lang === "zh")
+    }
+
+    else {
+
       acc.innerText =
         "精度：正在获取...";
 
+    }
+
     return;
+
   }
+
 
   if (lang === "ja") {
 
@@ -349,63 +521,99 @@ function updateAccuracyText() {
       "米";
 
   }
+
 }
 
 
-/* 現在地取得 */
+
+/* ================================
+   現在地取得
+================================ */
+
 function update() {
 
   navigator.geolocation.getCurrentPosition(
 
+
+    /* 取得成功 */
+
     function(pos) {
+
 
       const la =
         pos.coords.latitude.toFixed(5);
 
+
       const lo =
         pos.coords.longitude.toFixed(5);
 
-      /* 精度は見やすいよう整数mにする */
+
+      /* 精度を整数mで表示 */
+
       const ac =
-        Math.round(pos.coords.accuracy);
+        Math.round(
+          pos.coords.accuracy
+        );
 
 
       document
         .getElementById("lat")
         .innerText = la;
 
+
       document
         .getElementById("lng")
         .innerText = lo;
 
 
-      /* 精度を保存 */
+      /* 精度保存 */
+
       lastAccuracy = ac;
 
-      /* 精度表示を更新 */
+
+      /* 精度表示更新 */
+
       updateAccuracyText();
 
 
       /* 起動画面を消す */
+
       const loading =
-        document.getElementById("loadingScreen");
+        document.getElementById(
+          "loadingScreen"
+        );
+
 
       if (loading) {
-        loading.style.display = "none";
+
+        loading.style.display =
+          "none";
+
       }
 
     },
 
 
+    /* 取得失敗 */
+
     function(error) {
 
+
       const loading =
-        document.getElementById("loadingScreen");
+        document.getElementById(
+          "loadingScreen"
+        );
+
 
       if (loading) {
-        loading.style.display = "none";
+
+        loading.style.display =
+          "none";
+
       }
 
+
+      /* 日本語 */
 
       if (lang === "ja") {
 
@@ -414,10 +622,12 @@ function update() {
           .innerText =
           "取得失敗";
 
+
         document
           .getElementById("lng")
           .innerText =
           "取得失敗";
+
 
         document
           .getElementById("acc")
@@ -426,6 +636,9 @@ function update() {
 
       }
 
+
+      /* 英語 */
+
       else if (lang === "en") {
 
         document
@@ -433,10 +646,12 @@ function update() {
           .innerText =
           "Failed";
 
+
         document
           .getElementById("lng")
           .innerText =
           "Failed";
+
 
         document
           .getElementById("acc")
@@ -445,6 +660,9 @@ function update() {
 
       }
 
+
+      /* 中国語 */
+
       else {
 
         document
@@ -452,10 +670,12 @@ function update() {
           .innerText =
           "获取失败";
 
+
         document
           .getElementById("lng")
           .innerText =
           "获取失败";
+
 
         document
           .getElementById("acc")
@@ -467,10 +687,16 @@ function update() {
     },
 
 
+    /* GPS設定 */
+
     {
+
       enableHighAccuracy: true,
+
       timeout: 15000,
+
       maximumAge: 0
+
     }
 
   );
@@ -478,21 +704,30 @@ function update() {
 }
 
 
-/* 音声読み上げ */
+
+/* ================================
+   音声読み上げ
+================================ */
+
 function speak() {
+
 
   const lat =
     document
       .getElementById("lat")
       .innerText;
 
+
   const lng =
     document
       .getElementById("lng")
       .innerText;
 
+
   let text;
 
+
+  /* 日本語 */
 
   if (lang === "ja") {
 
@@ -505,6 +740,9 @@ function speak() {
 
   }
 
+
+  /* 英語 */
+
   else if (lang === "en") {
 
     text =
@@ -515,6 +753,9 @@ function speak() {
       ".";
 
   }
+
+
+  /* 中国語 */
 
   else {
 
@@ -529,81 +770,143 @@ function speak() {
 
 
   const uttr =
-    new SpeechSynthesisUtterance(text);
+    new SpeechSynthesisUtterance(
+      text
+    );
+
 
   uttr.rate = 0.8;
 
 
-  if (lang === "ja")
-    uttr.lang = "ja-JP";
+  if (lang === "ja") {
 
-  if (lang === "en")
-    uttr.lang = "en-US";
+    uttr.lang =
+      "ja-JP";
 
-  if (lang === "zh")
-    uttr.lang = "zh-CN";
+  }
+
+
+  if (lang === "en") {
+
+    uttr.lang =
+      "en-US";
+
+  }
+
+
+  if (lang === "zh") {
+
+    uttr.lang =
+      "zh-CN";
+
+  }
 
 
   speechSynthesis.cancel();
-  speechSynthesis.speak(uttr);
+
+  speechSynthesis.speak(
+    uttr
+  );
 
 }
 
 
-/* 初期化 */
+
+/* ================================
+   初期化
+================================ */
+
 setLang("ja");
+
+
+/* 初回位置取得 */
 
 update();
 
-/* 5秒ごとに現在地を更新 */
-setInterval(update, 5000);
+
+/* 5秒ごとに現在地更新 */
+
+setInterval(
+  update,
+  5000
+);
 
 
-/* 起動画面が残った場合の保険 */
-setTimeout(function() {
 
-  const loading =
-    document.getElementById("loadingScreen");
+/* ================================
+   起動画面が残った場合の保険
+================================ */
 
-  if (loading) {
-    loading.style.display = "none";
-  }
+setTimeout(
+  function() {
 
-}, 3000);
+    const loading =
+      document.getElementById(
+        "loadingScreen"
+      );
 
 
-/* Service Worker */
+    if (loading) {
+
+      loading.style.display =
+        "none";
+
+    }
+
+  },
+
+  3000
+);
+
+
+
+/* ================================
+   Service Worker
+================================ */
+
 if ("serviceWorker" in navigator) {
 
-  window.addEventListener("load", () => {
+  window.addEventListener(
+    "load",
+    () => {
 
-    navigator.serviceWorker
-      .register("./sw.js")
+      navigator
+        .serviceWorker
+        .register("./sw.js")
 
-      .then(() => {
+        .then(() => {
 
-        console.log(
-          "Service Worker registered"
-        );
+          console.log(
+            "Service Worker registered"
+          );
 
-      })
+        })
 
-      .catch((error) => {
+        .catch((error) => {
 
-        console.error(
-          "Service Worker registration failed:",
-          error
-        );
+          console.error(
+            "Service Worker registration failed:",
+            error
+          );
 
-      });
+        });
 
-  });
+    }
+  );
 
 }
 
 </script>
+
+
+
+<!-- フッター：1個だけ -->
+
 <footer>
   提供：大津市消防局
 </footer>
+
+
 </body>
+
 </html>
