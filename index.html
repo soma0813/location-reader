@@ -1,300 +1,271 @@
 <!doctype html>
-<html lang="ja">
-<head>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="icon.png">
-  <meta name="theme-color" content="#3f51b5">
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>現在地表示</title>
 
-<style>
-body {
-  margin:0;
-  font-family:sans-serif;
-  text-align:center;
-  color:#222;
-  background:#f5f6fa;
-}
+<html lang="ja">  
+<head>  
+  <link rel="manifest" href="manifest.json">  
+  <link rel="icon" href="icon.png">  
+  <meta name="theme-color" content="#3f51b5">  
+  <meta charset="utf-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+  <title>現在地表示</title> <style>  
+body {  
+  margin:0;  
+  font-family:sans-serif;  
+  text-align:center;  
+  color:#222;  
+  background:#f5f6fa;  
+}  
+  
+header {  
+  background:#3f51b5;  
+  color:white;  
+  padding:20px;  
+  font-size:26px;  
+  font-weight:bold;  
+}  
+  
+.lang-btn {  
+  font-size:16px;  
+  padding:12px;  
+  margin:6px;  
+  border:none;  
+  border-radius:10px;  
+  width:28%;  
+  background:#e0e0e0;  
+  color:black;  
+  font-weight:bold;  
+}  
+  
+.active {  
+  background:#3f51b5;  
+  color:white;  
+}  
+  
+h2 {  
+  font-size:22px;  
+  font-weight:bold;  
+}  
+  
+#latLabel, #lngLabel {  
+  font-size:22px;  
+  font-weight:bold;  
+  color:#222;  
+  margin-top:15px;  
+}  
+  
+.big {  
+  font-size:60px;  
+  font-weight:bold;  
+}  
+  
+#acc {  
+  font-size:20px;  
+  font-weight:bold;  
+  margin-top:10px;  
+}  
+  
+#speakBtn {  
+  width:90%;  
+  max-width:420px;  
+  font-size:20px;  
+  padding:16px;  
+  margin-top:20px;  
+  border:none;  
+  border-radius:12px;  
+  background:#3f51b5;  
+  color:white;  
+  font-weight:bold;  
+}  
+  
+#speakBtn:active {  
+  background:#2c3e9e;  
+}  
+#loadingScreen{  
+  position:fixed;  
+  top:0;  
+  left:0;  
+  width:100%;  
+  height:100%;  
+  background:#f5f6fa;  
+  display:flex;  
+  flex-direction:column;  
+  justify-content:center;  
+  align-items:center;  
+  z-index:9999;  
+}  
+  
+#loadingIcon{  
+  width:140px;  
+  height:140px;  
+  margin-bottom:20px;  
+}  
+  
+#loadingTitle{  
+  font-size:42px;  
+  font-weight:bold;  
+  color:#002060;  
+}  
+  
+#loadingText{  
+  margin-top:20px;  
+  font-size:22px;  
+  color:#555;  
+}  
+</style> </head> <body>  
+<div id="loadingScreen"> <img id="loadingIcon" src="icon.png"> <div id="loadingTitle">  
+    I'm here!  
+  </div> <div id="loadingText">  
+    現在地を取得しています...  
+  </div> </div> <header id="title">現在地表示</header> <div>  
+  <button id="btnJa" class="lang-btn active" onclick="setLang('ja')">日本語</button>  
+  <button id="btnEn" class="lang-btn" onclick="setLang('en')">English</button>  
+  <button id="btnZh" class="lang-btn" onclick="setLang('zh')">中文</button>  
+</div> <h2 id="msg">現在地を読み上げてください</h2> <p id="latLabel">緯度：</p>  
+<div class="big" id="lat">取得中...</div> <p id="lngLabel">経度：</p>  
+<div class="big" id="lng">取得中...</div> <p id="acc">精度：取得中...</p> <button onclick="speak()" id="speakBtn">現在地を音声で伝える</button>
 
-header {
-  background:#3f51b5;
-  color:white;
-  padding:20px;
-  font-size:26px;
-  font-weight:bold;
-}
-
-.lang-btn {
-  font-size:16px;
-  padding:12px;
-  margin:6px;
-  border:none;
-  border-radius:10px;
-  width:28%;
-  background:#e0e0e0;
-  color:black;
-  font-weight:bold;
-}
-
-.active {
-  background:#3f51b5;
-  color:white;
-}
-
-h2 {
-  font-size:22px;
-  font-weight:bold;
-}
-
-#latLabel, #lngLabel {
-  font-size:22px;
-  font-weight:bold;
-  color:#222;
-  margin-top:15px;
-}
-
-.big {
-  font-size:60px;
-  font-weight:bold;
-}
-
-#acc {
-  font-size:20px;
-  font-weight:bold;
-  margin-top:10px;
-}
-
-#speakBtn {
-  width:90%;
-  max-width:420px;
-  font-size:20px;
-  padding:16px;
-  margin-top:20px;
-  border:none;
-  border-radius:12px;
-  background:#3f51b5;
-  color:white;
-  font-weight:bold;
-}
-
-#speakBtn:active {
-  background:#2c3e9e;
-}
-#loadingScreen{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:#f5f6fa;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-
-#loadingIcon{
-  width:140px;
-  height:140px;
-  margin-bottom:20px;
-}
-
-#loadingTitle{
-  font-size:42px;
-  font-weight:bold;
-  color:#002060;
-}
-
-#loadingText{
-  margin-top:20px;
-  font-size:22px;
-  color:#555;
-}
-</style>
-</head>
-
-<body>
-<div id="loadingScreen">
-
-  <img id="loadingIcon" src="icon.png">
-
-  <div id="loadingTitle">
-    I'm here!
-  </div>
-
-  <div id="loadingText">
-    現在地を取得しています...
-  </div>
-
-</div>
-
-<header id="title">現在地表示</header>
-
-<div>
-  <button id="btnJa" class="lang-btn active" onclick="setLang('ja')">日本語</button>
-  <button id="btnEn" class="lang-btn" onclick="setLang('en')">English</button>
-  <button id="btnZh" class="lang-btn" onclick="setLang('zh')">中文</button>
-</div>
-
-<h2 id="msg">現在地を読み上げてください</h2>
-
-<p id="latLabel">緯度：</p>
-<div class="big" id="lat">取得中...</div>
-
-<p id="lngLabel">経度：</p>
-<div class="big" id="lng">取得中...</div>
-
-<p id="acc">精度：取得中...</p>
-
-<button onclick="speak()" id="speakBtn">現在地を音声で伝える</button>
-<script>
-let lang = "ja";
-let lastAccuracy = null;
-
-function setLang(l){
-  lang = l;
-
-  const titleEl = document.getElementById("title");
-  const msgEl = document.getElementById("msg");
-  const latLabelEl = document.getElementById("latLabel");
-  const lngLabelEl = document.getElementById("lngLabel");
-  const speakBtnEl = document.getElementById("speakBtn");
-
-  document.getElementById("btnJa").classList.remove("active");
-  document.getElementById("btnEn").classList.remove("active");
-  document.getElementById("btnZh").classList.remove("active");
-
-  if(l === "ja"){
-    document.getElementById("btnJa").classList.add("active");
-    titleEl.innerText = "現在地表示";
-    msgEl.innerText = "現在地を読み上げてください";
-    latLabelEl.innerText = "緯度：";
-    lngLabelEl.innerText = "経度：";
-    speakBtnEl.innerText = "現在地を音声で伝える";
-  } else if(l === "en"){
-    document.getElementById("btnEn").classList.add("active");
-    titleEl.innerText = "Current Location";
-    msgEl.innerText = "Please read your current location";
-    latLabelEl.innerText = "Latitude:";
-    lngLabelEl.innerText = "Longitude:";
-    speakBtnEl.innerText = "Speak current location";
-  } else {
-    document.getElementById("btnZh").classList.add("active");
-    titleEl.innerText = "当前位置";
-    msgEl.innerText = "请读出当前位置";
-    latLabelEl.innerText = "纬度：";
-    lngLabelEl.innerText = "经度：";
-    speakBtnEl.innerText = "语音播报当前位置";
-  }
-
-  updateAccuracyText();
-}
-
-function updateAccuracyText(){
-  const acc = document.getElementById("acc");
-
-  if(lastAccuracy === null){
-    if(lang === "ja") acc.innerText = "精度：取得中...";
-    if(lang === "en") acc.innerText = "Accuracy: Getting...";
-    if(lang === "zh") acc.innerText = "精度：正在获取...";
-    return;
-  }
-
-  if(lang === "ja"){
-    acc.innerText = "精度：±" + lastAccuracy + "m";
-  } else if(lang === "en"){
-    acc.innerText = "Accuracy: ±" + lastAccuracy + "m";
-  } else {
-    acc.innerText = "精度：±" + lastAccuracy + "米";
-  }
-}
-
-function update(){
-  navigator.geolocation.getCurrentPosition(
-    function(pos){
-      const la = pos.coords.latitude.toFixed(5);
-      const lo = pos.coords.longitude.toFixed(5);
-      const ac = pos.coords.accuracy.toFixed(2);
-
-      document.getElementById("lat").innerText = la;
-      document.getElementById("lng").innerText = lo;
-      document.getElementById("loadingScreen").style.display = "none";
-      document.getElementById("mainScreen").style.display = "block";
-      lastAccuracy = ac;
-      updateAccuracyText();
-    },
-    function(){
-      if(lang === "ja"){
-        document.getElementById("lat").innerText = "取得失敗";
-        document.getElementById("lng").innerText = "取得失敗";
-        document.getElementById("acc").innerText = "位置情報を許可してください";
-      } else if(lang === "en"){
-        document.getElementById("lat").innerText = "Failed";
-        document.getElementById("lng").innerText = "Failed";
-        document.getElementById("acc").innerText = "Please allow location access";
-      } else {
-        document.getElementById("lat").innerText = "获取失败";
-        document.getElementById("lng").innerText = "获取失败";
-        document.getElementById("acc").innerText = "请允许使用位置信息";
-      }
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0
-    }
-  );
-}
-
-function speak(){
-  const lat = document.getElementById("lat").innerText;
-  const lng = document.getElementById("lng").innerText;
-
-  let text;
-  if(lang === "ja"){
-    text = "現在地は、緯度" + lat + "、経度" + lng + "です。";
-  } else if(lang === "en"){
-    text = "Your current location is latitude " + lat + ", longitude " + lng + ".";
-  } else {
-    text = "当前位置是，纬度" + lat + "，经度" + lng + "。";
-  }
-
-  const uttr = new SpeechSynthesisUtterance(text);
-  uttr.rate = 0.8;
-
-  if(lang === "ja") uttr.lang = "ja-JP";
-  if(lang === "en") uttr.lang = "en-US";
-  if(lang === "zh") uttr.lang = "zh-CN";
-
-  speechSynthesis.cancel();
-  speechSynthesis.speak(uttr);
-}
-
-setLang("ja");
-update();
-setInterval(update, 5000);
-
-setTimeout(function(){
-  const loading = document.getElementById("loadingScreen");
- 
-  if(loading) loading.remove();
-}, 3000);
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker
-        .register("./sw.js")
-        .then(() => {
-          console.log("Service Worker registered");
-        })
-        .catch((error) => {
-          console.error("Service Worker registration failed:", error);
-        });
-    });
-  }
-</script>
-<script data-goatcounter="https://location-reader.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-</body>
-</html>
+<script>  
+let lang = "ja";  
+let lastAccuracy = null;  
+  
+function setLang(l){  
+  lang = l;  
+  
+  const titleEl = document.getElementById("title");  
+  const msgEl = document.getElementById("msg");  
+  const latLabelEl = document.getElementById("latLabel");  
+  const lngLabelEl = document.getElementById("lngLabel");  
+  const speakBtnEl = document.getElementById("speakBtn");  
+  
+  document.getElementById("btnJa").classList.remove("active");  
+  document.getElementById("btnEn").classList.remove("active");  
+  document.getElementById("btnZh").classList.remove("active");  
+  
+  if(l === "ja"){  
+    document.getElementById("btnJa").classList.add("active");  
+    titleEl.innerText = "現在地表示";  
+    msgEl.innerText = "現在地を読み上げてください";  
+    latLabelEl.innerText = "緯度：";  
+    lngLabelEl.innerText = "経度：";  
+    speakBtnEl.innerText = "現在地を音声で伝える";  
+  } else if(l === "en"){  
+    document.getElementById("btnEn").classList.add("active");  
+    titleEl.innerText = "Current Location";  
+    msgEl.innerText = "Please read your current location";  
+    latLabelEl.innerText = "Latitude:";  
+    lngLabelEl.innerText = "Longitude:";  
+    speakBtnEl.innerText = "Speak current location";  
+  } else {  
+    document.getElementById("btnZh").classList.add("active");  
+    titleEl.innerText = "当前位置";  
+    msgEl.innerText = "请读出当前位置";  
+    latLabelEl.innerText = "纬度：";  
+    lngLabelEl.innerText = "经度：";  
+    speakBtnEl.innerText = "语音播报当前位置";  
+  }  
+  
+  updateAccuracyText();  
+}  
+  
+function updateAccuracyText(){  
+  const acc = document.getElementById("acc");  
+  
+  if(lastAccuracy === null){  
+    if(lang === "ja") acc.innerText = "精度：取得中...";  
+    if(lang === "en") acc.innerText = "Accuracy: Getting...";  
+    if(lang === "zh") acc.innerText = "精度：正在获取...";  
+    return;  
+  }  
+  
+  if(lang === "ja"){  
+    acc.innerText = "精度：±" + lastAccuracy + "m";  
+  } else if(lang === "en"){  
+    acc.innerText = "Accuracy: ±" + lastAccuracy + "m";  
+  } else {  
+    acc.innerText = "精度：±" + lastAccuracy + "米";  
+  }  
+}  
+  
+function update(){  
+  navigator.geolocation.getCurrentPosition(  
+    function(pos){  
+      const la = pos.coords.latitude.toFixed(5);  
+      const lo = pos.coords.longitude.toFixed(5);  
+      const ac = pos.coords.accuracy.toFixed(2);  
+  
+      document.getElementById("lat").innerText = la;  
+      document.getElementById("lng").innerText = lo;  
+      document.getElementById("loadingScreen").style.display = "none";  
+      document.getElementById("mainScreen").style.display = "block";  
+      lastAccuracy = ac;  
+      updateAccuracyText();  
+    },  
+    function(){  
+      if(lang === "ja"){  
+        document.getElementById("lat").innerText = "取得失敗";  
+        document.getElementById("lng").innerText = "取得失敗";  
+        document.getElementById("acc").innerText = "位置情報を許可してください";  
+      } else if(lang === "en"){  
+        document.getElementById("lat").innerText = "Failed";  
+        document.getElementById("lng").innerText = "Failed";  
+        document.getElementById("acc").innerText = "Please allow location access";  
+      } else {  
+        document.getElementById("lat").innerText = "获取失败";  
+        document.getElementById("lng").innerText = "获取失败";  
+        document.getElementById("acc").innerText = "请允许使用位置信息";  
+      }  
+    },  
+    {  
+      enableHighAccuracy: true,  
+      timeout: 15000,  
+      maximumAge: 0  
+    }  
+  );  
+}  
+  
+function speak(){  
+  const lat = document.getElementById("lat").innerText;  
+  const lng = document.getElementById("lng").innerText;  
+  
+  let text;  
+  if(lang === "ja"){  
+    text = "現在地は、緯度" + lat + "、経度" + lng + "です。";  
+  } else if(lang === "en"){  
+    text = "Your current location is latitude " + lat + ", longitude " + lng + ".";  
+  } else {  
+    text = "当前位置是，纬度" + lat + "，经度" + lng + "。";  
+  }  
+  
+  const uttr = new SpeechSynthesisUtterance(text);  
+  uttr.rate = 0.8;  
+  
+  if(lang === "ja") uttr.lang = "ja-JP";  
+  if(lang === "en") uttr.lang = "en-US";  
+  if(lang === "zh") uttr.lang = "zh-CN";  
+  
+  speechSynthesis.cancel();  
+  speechSynthesis.speak(uttr);  
+}  
+  
+setLang("ja");  
+update();  
+setInterval(update, 5000);  
+  
+setTimeout(function(){  
+  const loading = document.getElementById("loadingScreen");  
+   
+  if(loading) loading.remove();  
+}, 3000);  
+  if ("serviceWorker" in navigator) {  
+    window.addEventListener("load", () => {  
+      navigator.serviceWorker  
+        .register("./sw.js")  
+        .then(() => {  
+          console.log("Service Worker registered");  
+        })  
+        .catch((error) => {  
+          console.error("Service Worker registration failed:", error);  
+        });  
+    });  
+  }  
+</script>  
